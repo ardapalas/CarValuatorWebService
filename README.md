@@ -95,7 +95,3 @@ Open `http://127.0.0.1:8000` in your browser.
 - **SHAP TreeExplainer is orders of magnitude faster** than the generic Explainer for tree-based models.
 - **Saving the full preprocessing pipeline (model + transformer + freq_maps) is essential** — missing any component breaks inference.
 - **Outlier removal significantly improved model performance** — a few extreme values were skewing predictions.
-
-## Author
-
-ARDALP — Mathematics & Computer Science Student at Istanbul Kültür University
