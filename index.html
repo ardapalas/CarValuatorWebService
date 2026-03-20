@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Car Valuator</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <svg class="logo-icon" viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="10" width="44" height="10" rx="3" fill="#a78bfa"/>
+        <rect x="10" y="4" width="28" height="10" rx="3" fill="#a78bfa"/>
+        <circle cx="10" cy="20" r="4" fill="#1e1b2e" stroke="#a78bfa" stroke-width="2"/>
+        <circle cx="38" cy="20" r="4" fill="#1e1b2e" stroke="#a78bfa" stroke-width="2"/>
+      </svg>
+      <span class="logo-text">Car Valuator</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="card-header">
+        <h2>Estimate Your Car's Value</h2>
+        <p class="subtitle">Select your car details to get an instant AI-powered price prediction.</p>
+      </div>
+
+      <form id="valuation-form">
+
+        <div class="section-label">Car Identity</div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="brand">Brand</label>
+            <select id="brand" required>
+              <option value="" disabled selected>Select brand</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="model">Model</label>
+            <select id="model" required disabled>
+              <option value="" disabled selected>Select model</option>
+            </select>
+          </div>
+          <div class="field full-width">
+            <label for="car_name">Car Name</label>
+            <select id="car_name" required disabled>
+              <option value="" disabled selected>Select car name</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-label">Vehicle Info</div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="vehicle_age">Vehicle Age (years)</label>
+            <input type="number" id="vehicle_age" min="0" max="40" placeholder="e.g. 5" required />
+          </div>
+          <div class="field">
+            <label for="km_driven">Kilometers Driven</label>
+            <input type="number" id="km_driven" min="0" placeholder="e.g. 50000" required />
+          </div>
+          <div class="field">
+            <label for="fuel_type">Fuel Type</label>
+            <select id="fuel_type" required>
+              <option value="" disabled selected>Select fuel type</option>
+              <option>Petrol</option>
+              <option>Diesel</option>
+              <option>CNG</option>
+              <option>LPG</option>
+              <option>Electric</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="transmission_type">Transmission</label>
+            <select id="transmission_type" required>
+              <option value="" disabled selected>Select transmission</option>
+              <option>Manual</option>
+              <option>Automatic</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="seller_type">Seller Type</label>
+            <select id="seller_type" required>
+              <option value="" disabled selected>Select seller type</option>
+              <option>Individual</option>
+              <option>Dealer</option>
+              <option>Trustmark Dealer</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="seats">Seats</label>
+            <input type="number" id="seats" min="2" max="14" placeholder="e.g. 5" required />
+          </div>
+        </div>
+
+        <div class="section-label">Performance</div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="mileage">Mileage (km/l)</label>
+            <input type="number" id="mileage" step="0.01" min="0" placeholder="e.g. 18.5" required />
+          </div>
+          <div class="field">
+            <label for="engine">Engine (cc)</label>
+            <input type="number" id="engine" min="0" placeholder="e.g. 1197" required />
+          </div>
+          <div class="field">
+            <label for="max_power">Max Power (bhp)</label>
+            <input type="number" id="max_power" step="0.01" min="0" placeholder="e.g. 81.86" required />
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="btn-text">Get Valuation</span>
+          <span id="btn-spinner" class="spinner hidden"></span>
+        </button>
+      </form>
+
+      <!-- Result -->
+      <div id="result" class="result hidden">
+        <div class="result-glow"></div>
+        <div class="result-label">Estimated Market Value</div>
+        <div class="result-price" id="result-price"></div>
+      </div>
+
+      <!-- SHAP Chart -->
+      <div id="shap-section" class="shap-section hidden">
+        <div class="shap-header">
+          <span class="shap-title">What's driving this price?</span>
+          <span class="shap-subtitle">SHAP feature contributions</span>
+        </div>
+
+        <!-- Top 3 factors -->
+        <div id="top-factors" class="top-factors"></div>
+
+        <div class="shap-legend">
+          <span class="legend-dot pos"></span><span>Increases price</span>
+          <span class="legend-dot neg"></span><span>Decreases price</span>
+        </div>
+        <div id="shap-chart"></div>
+
+        <p class="shap-explain">
+          Positive values increase price, negative values decrease price relative to the average vehicle.
+        </p>
+
+        <div class="shap-footer">
+          Base price (dataset average): <strong id="base-value"></strong>
+        </div>
+      </div>
+
+      <div id="error-msg" class="error hidden"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Car Valuator &mdash; AI-Powered Used Car Price Prediction</p>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
